@@ -1,27 +1,28 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Document extends Model
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('documents', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+    use HasFactory;
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    protected $fillable = [
+        'user_id',
+        'document_type',
+        'file_path',
+        'status',
+        'data_json',
+    ];
+
+    protected $casts = [
+        'data_json' => 'array',
+    ];
+
+    public function user()
     {
-        Schema::dropIfExists('documents');
+        return $this->belongsTo(User::class);
     }
-};
+}

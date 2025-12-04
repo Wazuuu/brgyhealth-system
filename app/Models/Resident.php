@@ -9,14 +9,10 @@ class Resident extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     * Add all columns from the `residents` table (excluding id, timestamps).
-     * Assuming columns like first_name, last_name, birth_date, address, phone_number, etc.
-     *
-     * @var array<int, string>
-     */
-    protected $guarded = ['id']; // <-- FIX: Use $guarded to allow all but 'id'
+    // Mass assignment is allowed for all fields except 'id'
+    protected $guarded = ['id'];
     
-    // Add relationships here if needed
+    protected $casts = [
+        'is_archived' => 'boolean', // <-- ADD THIS for the new column
+    ];
 }
