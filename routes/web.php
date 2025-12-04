@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\VerificationCodeController;
 
 // ----------------------
 // Home Page
@@ -50,3 +51,11 @@ Route::prefix('admin')->middleware(['auth','can:admin-only'])->group(function() 
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/email/verify-code', [VerificationCodeController::class, 'show'])
+    ->middleware('auth')
+    ->name('verification.notice'); // Keep this name for Fortify compatibility
+
+Route::post('/email/verify-code', [VerificationCodeController::class, 'verify'])
+    ->middleware('auth')
+    ->name('verification.verify');

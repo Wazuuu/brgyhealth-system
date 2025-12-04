@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\VerificationCodeController; // <-- ADD THIS LINE
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -36,16 +37,38 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
+    
+    // ----------------------------------------------------------------------
+    // CUSTOM 6-DIGIT CODE VERIFICATION ROUTES
+    // ----------------------------------------------------------------------
+    
+    // 1. Notice route, points to your new view (Must be named 'verification.notice')
+    Route::get('/email/verify-code', [VerificationCodeController::class, 'show'])
         ->name('verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
+    // 2. Verification processing route (Must be named 'verification.verify')
+    Route::post('/email/verify-code', [VerificationCodeController::class, 'verify'])
         ->name('verification.verify');
 
+    // 3. Resend notification route (Kept the original logic, works with your custom notification)
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
         ->middleware('throttle:6,1')
         ->name('verification.send');
+
+    // ----------------------------------------------------------------------
+    // ORIGINAL LARAVEL ROUTES - COMMENTED OUT
+    // ----------------------------------------------------------------------
+
+    // Route::get('verify-email', EmailVerificationPromptController::class)
+    //     ->name('verification.notice');
+
+    // Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    //     ->middleware(['signed', 'throttle:6,1'])
+    //     ->name('verification.verify');
+
+    // ----------------------------------------------------------------------
+    // END OF CUSTOMIZATION
+    // ----------------------------------------------------------------------
 
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');
