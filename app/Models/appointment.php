@@ -5,23 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Appointment extends Model
+class Appointment extends Model // <-- FIX: Renamed class to Appointment
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'full_name',
-        'email',
-        'phone',
-        'scheduled_at',
-        'reason',
+    /**
+     * The attributes that are mass assignable.
+     * Add all columns from the `appointments` table (excluding id, timestamps).
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [ // <-- FIX: Added $fillable
+        'resident_id', 
+        'title', 
+        'description', 
+        'appointment_date', 
         'status'
-    ];
-
-    // optional: relationship to user
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    ]; 
+    
+    // Add relationships here if needed
+    // public function resident() { return $this->belongsTo(Resident::class); }
 }
