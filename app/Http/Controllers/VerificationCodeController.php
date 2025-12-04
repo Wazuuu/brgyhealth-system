@@ -22,11 +22,14 @@ class VerificationCodeController extends Controller
         $user = $request->user();
 
         if ($request->code === $user->verification_code && now()->lessThan($user->verification_code_expires_at)) {
-
+            
             $user->markEmailAsVerified();
             $user->verification_code = null;
             $user->verification_code_expires_at = null;
             $user->save();
+
+            // <--- NEW: Log the user in after successful verification --->
+            Auth::login($user); 
 
             return redirect()->intended(route('dashboard', absolute: false));
         }

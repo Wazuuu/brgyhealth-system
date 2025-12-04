@@ -2,14 +2,15 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+// The following lines were removed to force immediate sending and fix the namespace error:
+// use Illuminate\Bus\Queueable; 
+// use Illuminate\Contracts\Queue\ShouldQueue; 
 
-class VerifyEmailWithCode extends Notification implements ShouldQueue
+class VerifyEmailWithCode extends Notification // <-- NOTE: Removed 'implements ShouldQueue'
 {
-    use Queueable;
+    // NOTE: The 'use Queueable;' line is also gone
 
     public function via(object $notifiable): array
     {

@@ -41,10 +41,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // 1. Send the OTP notification
         event(new Registered($user));
 
-        Auth::login($user);
+        // 2. DO NOT Auth::login($user); <-- DELETE THIS LINE
 
-        return redirect(route('dashboard', absolute: false));
+        // 3. Redirect the user to the verification notice page (where they enter the code)
+        // We use 'verification.notice' route name which points to your custom OTP page.
+        return redirect(route('verification.notice', absolute: false)); 
     }
 }
+
